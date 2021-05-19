@@ -7,26 +7,30 @@ remDr <- rD[["client"]]
 
 # Navigate to site
 remDr$navigate("https://tncovidbeds.tnega.org")
-
 # Establish a wait for an element
-remDr$setTimeout(type = "page load", milliseconds = 10000)
+remDr$setTimeout(type = "page load", milliseconds = 60000)
+Sys.sleep(10)
 
 # Loop_01 to select the district 
 
 # Select district of interest
 District_dropdown <- remDr$findElement(using = 'class', "react-select__input")
 District_input <- District_dropdown$findChildElement(using = 'xpath', "input")
-District_input$sendKeysToElement(list("Viru", "\uE007"))
+District_input$sendKeysToElement(list("Chennai", "\uE007"))
+Sys.sleep(10)
 
 # Select Modal Agreement
 modalAgree<-remDr$findElement(using = 'xpath', '/html/body/div[2]/div/div[1]/div/div/center/button')
 modalAgree$clickElement()
+
 # Select # of Hospitals to display in 1 page
 HospPerPg_dropdown <- remDr$findElement(using = 'css', '[class="d-inline-block dropdown"]')
 HospPerPg_dropdown$clickElement()
+
 # Select 100 as # of Hospitals to be displayed in 1 page
 HospPerPg_100 <-HospPerPg_dropdown$findChildElement(using = 'xpath', '/html/body/div/div/div/div[1]/div/div/div[3]/div/div/div/div/div[1]/div[4]/div/div/div/div/div/div/div/button[5]')
 HospPerPg_100$sendKeysToElement(list("\uE007"))
+Sys.sleep(10)
 
 # Find the number of pages available
 TN_Beds<-read_html(remDr$getPageSource()[[1]])
@@ -37,20 +41,32 @@ remin <- as.numeric(str_trim(bed_txt))%%100
 pages<-if (remin <= 0) {num} else {num+1}
 
 # Loop_02 to click the page of interest
-for(var in 0:pages)
+for(var in 1:pages)
 {
-  print(paste0('/html/body/div/div/div/div[1]/div/div/div[3]/div/div/div/div/div[2]/ul/li[',var,']/a'))
+  PgXpath<-paste0('/html/body/div/div/div/div[1]/div/div/div[3]/div/div/div/div/div[2]/ul/li[',var+2,']/a')
+  print(PgXpath)
+  Pg_click <-remDr$findElement(using = 'xpath', PgXpath)
+  Pg_click$clickElement()
+  remDr$setTimeout(type = "page load", milliseconds = 60000)
+  Sys.sleep(10)
 }
-
-# Click the page of interest
-PageClick<-remDr$findElement(using = 'xpath', '/html/body/div/div/div/div[1]/div/div/div[3]/div/div/div/div/div[2]/ul/li[4]/a')
-PageClick$clickElement()
 
 # Extract table
 export_html<-read_html(html_covid)
-export_html %>% 
+TN_Beds %>% 
   html_nodes(xpath='/html/body/div/div/div/div[1]/div/div/div[3]/div/div/div/div/div[1]/table') %>%
-  html_table()
+  html_table(fill=TRUE) 
+  
+TN_Beds %>% 
+  html_nodes('td.text-left.w-20 > span:nth-child(1) > a') %>%
+  html_attr("href")
+    html_text()  
+  #AutoNumber1 > tbody > tr:nth-child(3) > td:nth-child(2) > font > a
+    #tableBody > tr:nth-child(1) > td.text-left.w-20 > span:nth-child(7) > a
+  #tableBody > tr:nth-child(1) > td.text-left.w-20 > span:nth-child(1) > a
+    
+    //*[@id="tableBody"]/tr[1]/td[1]/span[4]/a
+    
 
 # Extract for table attributes hidden as array
 
