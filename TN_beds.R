@@ -1,7 +1,7 @@
 # IMPORT Packages 
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium"), library, character.only = TRUE)
 # DEFINE Variables
-currDate<-Sys.Date()
+currDate<-Sys.Date()-1
 start_time<-Sys.time()
 
 #--------- Working code
@@ -26,7 +26,7 @@ Dist<- c(
         "Vellore", "Villupuram", "Virudhunagar"
          )
 
-# Dist<- c("Mayiladuthurai")
+# Dist<- c("Dindigul","Erode")
 
 table_A <-as.data.frame(character(0))
 for (i in Dist) {
