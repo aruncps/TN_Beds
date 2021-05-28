@@ -183,6 +183,7 @@ tbl_TN_CovidBeds <- table_A %>%
                           )
 tbl_TN_CovidBeds<-tibble(tbl_TN_CovidBeds)
 
+
 tbl_byDist_CovidBeds <- tbl_TN_CovidBeds %>% 
       group_by(importDate,District) %>% 
       summarize(
@@ -200,20 +201,26 @@ tbl_byDist_CovidBeds <- tbl_TN_CovidBeds %>%
           ) %>% 
       ungroup()
 
-# Write a copy 
+
+# Declare File name
 file_TN_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/TN_CovidBeds.csv")
 file_byDist_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/byDist_CovidBeds.csv")
 
-# write.table(tbl_TN_CovidBeds, file_TN_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
-# write.table(tbl_byDist_CovidBeds, file_byDist_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
-
+# Verify No. of beds before writing to csv
+tbl_TN_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
 TN_CovidBeds<-read.table(file_TN_CovidBeds,header=TRUE, row.names=NULL)
 TN_CovidBeds<-tibble(TN_CovidBeds)
 TN_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
 
+# Verify No. of hospitals before writing to csv
+tbl_byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
 byDist_CovidBeds<-read.table(file_byDist_CovidBeds,header=TRUE, row.names=NULL)
 byDist_CovidBeds<-tibble(byDist_CovidBeds)
 byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
+
+# Write a copy 
+# write.table(tbl_TN_CovidBeds, file_TN_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
+# write.table(tbl_byDist_CovidBeds, file_byDist_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
 
 View(byDist_CovidBeds %>% select(importDate, District, No_of_Hospitals, Normal_Bed_Occupancy, O2_Bed_Occupancy, ICU_Bed_Occupancy, All_Bed_Occupancy ))
 
@@ -242,8 +249,8 @@ Dist_Beds$O2_Bed_Occupancy_Y1<-cut(Dist_Beds$O2_Bed_Occupancy,breaks = c(0,0.2,0
 Dist_Beds$ICU_Bed_Occupancy_Y1<-cut(Dist_Beds$ICU_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
 Dist_Beds$All_Bed_Occupancy_Y1<-cut(Dist_Beds$All_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
 
-
-
+#--------------------------------------------------
+# Charting
 ggplot(Dist_Beds
        ,aes(importDate, District)) + 
   geom_tile(aes(fill= Normal_Bed_Occupancy_Y1),colour="white",size=0.25) +
