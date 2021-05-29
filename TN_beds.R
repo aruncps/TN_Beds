@@ -201,7 +201,7 @@ tbl_byDist_CovidBeds <- tbl_TN_CovidBeds %>%
           ) %>% 
       ungroup()
 
-
+#-------------------------------------------------------------------
 # Declare File name
 file_TN_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/TN_CovidBeds.csv")
 file_byDist_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/byDist_CovidBeds.csv")
@@ -221,6 +221,9 @@ byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(im
 # Write a copy 
 # write.table(tbl_TN_CovidBeds, file_TN_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
 # write.table(tbl_byDist_CovidBeds, file_byDist_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
+
+# write.table(TN_CovidBeds %>% select(HospitalName,Address,District) %>% distinct() %>% select(District,HospitalName), "/home/arunkumar/Documents/GitHub/TN_Beds/TN_CovidHospitals.csv", append = FALSE, col.names = TRUE, row.names = FALSE)
+
 
 View(byDist_CovidBeds %>% select(importDate, District, No_of_Hospitals, Normal_Bed_Occupancy, O2_Bed_Occupancy, ICU_Bed_Occupancy, All_Bed_Occupancy ))
 
