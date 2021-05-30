@@ -1,7 +1,8 @@
 # IMPORT Packages 
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium"), library, character.only = TRUE)
+lapply(c("tidyverse","rvest","hrbrthemes","viridis","plotly","scales","stringr","zoo","tidyquant"), library, character.only = TRUE)
 # DEFINE Variables
-currDate<-Sys.Date()-1
+currDate<-Sys.Date()
 start_time<-Sys.time()
 
 #--------- Working code
@@ -228,7 +229,7 @@ byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(im
 View(byDist_CovidBeds %>% select(importDate, District, No_of_Hospitals, Normal_Bed_Occupancy, O2_Bed_Occupancy, ICU_Bed_Occupancy, All_Bed_Occupancy ))
 
 #--------------------------------------------------
-lapply(c("tidyverse","rvest","hrbrthemes","viridis","plotly","scales","stringr","zoo","tidyquant"), library, character.only = TRUE)
+
 
 Dist_Beds <- byDist_CovidBeds %>% 
                 group_by(importDate, District, Normal_Bed_Occupancy) %>%
