@@ -1,0 +1,130 @@
+---
+title: "How stressed are TN front line workers?"
+output: 
+  html_document:
+    css: /home/arunkumar/Documents/GitHub/aruncps.github.io/assets/css/main.css
+    includes:
+       in_header: GA_Script.html
+---
+* **Source:** [TN COVID Beds](https://tncovidbeds.tnega.org/)
+* **Latest data import date:** `r format(Sys.time()-10000, '%d %B, %Y')`
+* **Summary:** Tamil Nadu Government publishes COVID bed availability of **"Normal, O2 & ICU Beds"**, by each district. Using it, heatmap is generated to view **"The STRESSLEVEL of frontline workers"**, by District and Area.
+
+
+## List of Districts: {#lod}
+  + [All District](#AllDistrict)
+  + Other Districts (Inprogress)
+
+```{r packages, results="hide",echo=FALSE, message=FALSE, warning=FALSE}
+# IMPORT Packages 
+lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
+
+#------- Import CSV
+file_TN_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/TN_CovidBeds.csv")
+file_byDist_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/byDist_CovidBeds.csv")
+
+# Verify No. of beds before writing to csv
+TN_CovidBeds<-read.table(file_TN_CovidBeds,header=TRUE, row.names=NULL)
+TN_CovidBeds<-tibble(TN_CovidBeds)
+# TN_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
+
+# Verify No. of hospitals before writing to csv
+byDist_CovidBeds<-read.table(file_byDist_CovidBeds,header=TRUE, row.names=NULL)
+byDist_CovidBeds<-tibble(byDist_CovidBeds)
+# byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
+
+Dist_Beds <- byDist_CovidBeds %>% 
+                group_by(importDate, District, Normal_Bed_Occupancy) %>%
+                summarize(
+                  No_of_Hospitals=sum(No_of_Hospitals),
+                  Normal_Bed_Occupancy=sum(Normal_Bed_Occupancy),
+                  O2_Bed_Occupancy=sum(O2_Bed_Occupancy),
+                  ICU_Bed_Occupancy=sum(ICU_Bed_Occupancy),
+                  All_Bed_Occupancy=sum(All_Bed_Occupancy)
+                ) %>%
+                select(importDate, District, No_of_Hospitals, Normal_Bed_Occupancy, O2_Bed_Occupancy, ICU_Bed_Occupancy, All_Bed_Occupancy ) %>%
+                ungroup()
+
+Dist_Beds$importDate<-as.Date(as.character(Dist_Beds$importDate))
+
+Dist_Beds$Normal_Bed_Occupancy_Y1<-cut(Dist_Beds$Normal_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
+Dist_Beds$O2_Bed_Occupancy_Y1<-cut(Dist_Beds$O2_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
+Dist_Beds$ICU_Bed_Occupancy_Y1<-cut(Dist_Beds$ICU_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
+Dist_Beds$All_Bed_Occupancy_Y1<-cut(Dist_Beds$All_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
+
+```
+
+
+## All Districts {#AllDistrict}
+```{r echo=FALSE, warning=FALSE, fig.height=8, fig.width=7}
+ggplot(Dist_Beds
+       ,aes(importDate, District)) + 
+  geom_tile(aes(fill= Normal_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "Normal Bed Occupancy (%)") +
+  ylab(label = "District") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Dist_Beds$District) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+```{r echo=FALSE, warning=FALSE, fig.height=8, fig.width=7}
+ggplot(Dist_Beds
+       ,aes(importDate, District)) + 
+  geom_tile(aes(fill= O2_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "O2 Bed Occupancy (%)") +
+  ylab(label = "District") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Dist_Beds$District) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+
+```{r echo=FALSE, warning=FALSE, fig.height=8, fig.width=7}
+ggplot(Dist_Beds
+       ,aes(importDate, District)) + 
+  geom_tile(aes(fill= ICU_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "ICU Bed Occupancy (%)") +
+  ylab(label = "District") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Dist_Beds$District) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+
+###### [Back to full list of Districts](#lod) {style="float:right"}
