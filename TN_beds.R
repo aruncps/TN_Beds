@@ -1,8 +1,8 @@
 # IMPORT Packages 
-lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium"), library, character.only = TRUE)
-lapply(c("tidyverse","rvest","hrbrthemes","viridis","plotly","scales","stringr","zoo","tidyquant"), library, character.only = TRUE)
+lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
+
 # DEFINE Variables
-currDate<-Sys.Date()
+currDate<-Sys.Date()-1
 start_time<-Sys.time()
 
 #--------- Working code
@@ -27,18 +27,16 @@ Dist<- c(
         "Vellore", "Villupuram", "Virudhunagar"
          )
 
-# Dist<- c("Dindigul","Erode")
-
+# Dist<- c("Thoothukudi")
 table_A <-as.data.frame(character(0))
 for (i in Dist) {
     print(paste0("Dist - ",i))
   
     # Select district of interest
-    District_dropdown <- remDr$findElement(using = 'class', "react-select__input")
-    District_input <- District_dropdown$findChildElement(using = 'xpath', "input")
-    District_input$sendKeysToElement(list(i, "\uE007"))
+    District_dropdown <- remDr$findElement(using = 'xpath', "/html/body/div/div/div/div[1]/div/div/div[2]/div/div/div[1]/div/div/p[2]/select")
+    District_dropdown$sendKeysToElement(list(i, "\uE007"))
     Sys.sleep(runif(1,10,15))
-    
+    District_dropdown$highlightElement()
     # Select Modal Agreement
     modalAgree<-remDr$findElement(using = 'xpath', '/html/body/div[2]/div/div[1]/div/div/center/button')
     modalAgree$clickElement()
@@ -208,16 +206,16 @@ file_TN_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/TN_CovidBeds
 file_byDist_CovidBeds<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/byDist_CovidBeds.csv")
 
 # Verify No. of beds before writing to csv
-tbl_TN_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
+tbl_TN_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
 TN_CovidBeds<-read.table(file_TN_CovidBeds,header=TRUE, row.names=NULL)
 TN_CovidBeds<-tibble(TN_CovidBeds)
-TN_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
+TN_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
 
 # Verify No. of hospitals before writing to csv
-tbl_byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
+tbl_byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
 byDist_CovidBeds<-read.table(file_byDist_CovidBeds,header=TRUE, row.names=NULL)
 byDist_CovidBeds<-tibble(byDist_CovidBeds)
-byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(importDate))
+byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
 
 # Write a copy 
 # write.table(tbl_TN_CovidBeds, file_TN_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
@@ -229,8 +227,6 @@ byDist_CovidBeds %>% group_by(importDate) %>% summarise(n()) %>% arrange(desc(im
 View(byDist_CovidBeds %>% select(importDate, District, No_of_Hospitals, Normal_Bed_Occupancy, O2_Bed_Occupancy, ICU_Bed_Occupancy, All_Bed_Occupancy ))
 
 #--------------------------------------------------
-
-
 Dist_Beds <- byDist_CovidBeds %>% 
                 group_by(importDate, District, Normal_Bed_Occupancy) %>%
                 summarize(
@@ -244,9 +240,6 @@ Dist_Beds <- byDist_CovidBeds %>%
                 ungroup()
 
 Dist_Beds$importDate<-as.Date(as.character(Dist_Beds$importDate))
-
-byDist_CovidBeds %>% filter(District=='Mayiladuthurai')
-
 
 Dist_Beds$Normal_Bed_Occupancy_Y1<-cut(Dist_Beds$Normal_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
 Dist_Beds$O2_Bed_Occupancy_Y1<-cut(Dist_Beds$O2_Bed_Occupancy,breaks = c(0,0.2,0.4,0.6,0.8,1,Inf),right = FALSE)
@@ -318,3 +311,4 @@ ggplot(Dist_Beds
   ) +
   scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
 
+# file_move("/home/arunkumar/Documents/GitHub/TN_Beds/TN_Bed_Occupancy.html", "/home/arunkumar/Documents/GitHub/aruncps.github.io/TN_Bed_Occupancy.html")
