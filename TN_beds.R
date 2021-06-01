@@ -2,7 +2,7 @@
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
 
 # DEFINE Variables
-currDate<-Sys.Date()-1
+currDate<-Sys.Date()
 start_time<-Sys.time()
 
 #--------- Working code
@@ -210,6 +210,7 @@ tbl_TN_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) 
 TN_CovidBeds<-read.table(file_TN_CovidBeds,header=TRUE, row.names=NULL)
 TN_CovidBeds<-tibble(TN_CovidBeds)
 TN_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
+
 
 # Verify No. of hospitals before writing to csv
 tbl_byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
