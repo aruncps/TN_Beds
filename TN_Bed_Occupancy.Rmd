@@ -7,7 +7,7 @@ output:
        in_header: GA_Script.html
 ---
 * **Source:** [TN COVID Beds](https://tncovidbeds.tnega.org/)
-* **Latest data import date:** `r format(Sys.time(), '%d %B, %Y')`
+* **Latest data import date:** `r format(Sys.time()-10000, '%d %B, %Y')`
 * **Summary:** Tamil Nadu Government publishes COVID bed availability of **"Normal, O2 & ICU Beds"**, by each district. Using it, heatmap is generated to view **"The STRESSLEVEL of frontline workers"**, by District and Area.
 
 
@@ -76,7 +76,7 @@ ggplot(Dist_Beds
         strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
         legend.position="top"
   ) +
-  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
 
 ```
 ```{r echo=FALSE, warning=FALSE, fig.height=8, fig.width=7}
@@ -99,7 +99,7 @@ ggplot(Dist_Beds
         strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
         legend.position="top"
   ) +
-  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
 
 ```
 
@@ -123,7 +123,7 @@ ggplot(Dist_Beds
         strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
         legend.position="top"
   ) +
-  scale_x_date(date_breaks = "1 day", date_minor_breaks = "1 day", date_labels = "%d/%m")
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
 
 ```
 
