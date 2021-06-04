@@ -248,7 +248,7 @@ ggplot(Ariyalur_Area_CovidBeds
 
 ## Chengalpattu {#Chengalpattu}
 
-```{r echo=FALSE, warning=FALSE, fig.height=8.5, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=10, fig.width=7}
 Chengalpattu_Area_CovidBeds <- TN_Area_CovidBeds %>% filter(District == "Chengalpattu")
 
 ggplot(Chengalpattu_Area_CovidBeds
@@ -274,7 +274,7 @@ ggplot(Chengalpattu_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=8.5, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=10, fig.width=7}
 ggplot(Chengalpattu_Area_CovidBeds
        ,aes(importDate, Area)) + 
   geom_tile(aes(fill= O2_Bed_Occupancy_Y1),colour="white",size=0.25) +
@@ -298,9 +298,9 @@ ggplot(Chengalpattu_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=8.5, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=10, fig.width=7}
 ggplot(Chengalpattu_Area_CovidBeds
-       ,aes(importDate, District)) + 
+       ,aes(importDate, Area)) + 
   geom_tile(aes(fill= ICU_Bed_Occupancy_Y1),colour="white",size=0.25) +
   # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
   scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
@@ -326,7 +326,7 @@ ggplot(Chengalpattu_Area_CovidBeds
 
 ## Chennai {#Chennai}
 
-```{r echo=FALSE, warning=FALSE, fig.height=16, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=18, fig.width=7}
 Chennai_Area_CovidBeds <- TN_Area_CovidBeds %>% filter(District == "Chennai")
 ggplot(Chennai_Area_CovidBeds
        ,aes(importDate, Area)) + 
@@ -351,7 +351,7 @@ ggplot(Chennai_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=16, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=18, fig.width=7}
 ggplot(Chennai_Area_CovidBeds
        ,aes(importDate, Area)) + 
   geom_tile(aes(fill= O2_Bed_Occupancy_Y1),colour="white",size=0.25) +
@@ -375,9 +375,9 @@ ggplot(Chennai_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=16, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=18, fig.width=7}
 ggplot(Chennai_Area_CovidBeds
-       ,aes(importDate, District)) + 
+       ,aes(importDate, Area)) + 
   geom_tile(aes(fill= ICU_Bed_Occupancy_Y1),colour="white",size=0.25) +
   # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
   scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
@@ -403,7 +403,7 @@ ggplot(Chennai_Area_CovidBeds
 
 ## Coimbatore {#Coimbatore}
 
-```{r echo=FALSE, warning=FALSE, fig.height=13, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=14, fig.width=7}
 Coimbatore_Area_CovidBeds <- TN_Area_CovidBeds %>% filter(District == "Coimbatore")
 
 ggplot(Coimbatore_Area_CovidBeds
@@ -429,7 +429,7 @@ ggplot(Coimbatore_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=13, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=14, fig.width=7}
 ggplot(Coimbatore_Area_CovidBeds
        ,aes(importDate, Area)) + 
   geom_tile(aes(fill= O2_Bed_Occupancy_Y1),colour="white",size=0.25) +
@@ -453,9 +453,9 @@ ggplot(Coimbatore_Area_CovidBeds
 
 ```
 
-```{r echo=FALSE, warning=FALSE, fig.height=13, fig.width=7}
+```{r echo=FALSE, warning=FALSE, fig.height=14, fig.width=7}
 ggplot(Coimbatore_Area_CovidBeds
-       ,aes(importDate, District)) + 
+       ,aes(importDate, Area)) + 
   geom_tile(aes(fill= ICU_Bed_Occupancy_Y1),colour="white",size=0.25) +
   # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
   scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
