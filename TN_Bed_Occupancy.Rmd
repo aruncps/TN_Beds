@@ -63,7 +63,7 @@ AreaSplit_TN_CovidHospitals<-read.csv(file_AreaSplit_TN_CovidHospitals,header=TR
 AreaSplit_TN_CovidHospitals<-tibble(AreaSplit_TN_CovidHospitals)
 
 tbl_TN_Area_CovidBeds <- TN_CovidBeds %>% mutate(HospitalName=str_trim(HospitalName)) %>%
-  inner_join(AreaSplit_TN_CovidHospitals, by = c("District"="District","HospitalName"="HospitalName"))
+  inner_join(AreaSplit_TN_CovidHospitals %>% mutate(HospitalName=str_trim(HospitalName)), by = c("District"="District","HospitalName"="HospitalName"))
   
 TN_Area_CovidBeds <- tbl_TN_Area_CovidBeds %>% 
   group_by(importDate,District,Area) %>% 
@@ -328,6 +328,7 @@ ggplot(Chengalpattu_Area_CovidBeds
 
 ```{r echo=FALSE, warning=FALSE, fig.height=18, fig.width=7}
 Chennai_Area_CovidBeds <- TN_Area_CovidBeds %>% filter(District == "Chennai")
+
 ggplot(Chennai_Area_CovidBeds
        ,aes(importDate, Area)) + 
   geom_tile(aes(fill= Normal_Bed_Occupancy_Y1),colour="white",size=0.25) +
