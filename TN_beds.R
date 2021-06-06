@@ -2,7 +2,7 @@
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
 
 # DEFINE Variables
-currDate<-Sys.Date()-1
+currDate<-Sys.Date()
 start_time<-Sys.time()
 
 #--------- Working code
@@ -231,6 +231,17 @@ byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) 
 
 
 
+file_AreaSplit_TN_CovidHospitals<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/AreaSplit_TN_CovidHospitals.csv")
+AreaSplit_TN_CovidHospitals<-read.csv(file_AreaSplit_TN_CovidHospitals,header=TRUE, row.names=NULL)
+AreaSplit_TN_CovidHospitals<-tibble(AreaSplit_TN_CovidHospitals)
+
+View(
+TN_CovidBeds %>% mutate(HospitalName=str_trim(HospitalName)) %>%
+  left_join(AreaSplit_TN_CovidHospitals %>% mutate(HospitalName=str_trim(HospitalName)), by = c("District"="District","HospitalName"="HospitalName")) %>%
+  filter(is.na(Area) & District=='Chengalpattu') %>%
+  select(HospitalName) %>%
+  distinct()
+  )
 
 
 
