@@ -238,10 +238,12 @@ AreaSplit_TN_CovidHospitals<-tibble(AreaSplit_TN_CovidHospitals)
 View(
 TN_CovidBeds %>% mutate(HospitalName=str_trim(HospitalName)) %>%
   left_join(AreaSplit_TN_CovidHospitals %>% mutate(HospitalName=str_trim(HospitalName)), by = c("District"="District","HospitalName"="HospitalName")) %>%
-  filter(is.na(Area) & District %in% c('Chennai','Chengalpattu','Ariyalur','Coimbatore') ) %>%
+  # filter(is.na(Area) & District %in% c('Chennai','Chengalpattu','Ariyalur','Coimbatore') ) %>%
+  filter(is.na(Area) & District %in% c('Namakkal') ) %>%
   select(District,HospitalName) %>%
   distinct()
   )
 
+write.table(namakkal, paste0("/home/arunkumar/Documents/GitHub/TN_Beds/Namakkal.csv"), append = TRUE, col.names = FALSE, row.names = FALSE)
 
 
