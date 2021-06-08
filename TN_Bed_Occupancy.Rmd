@@ -7,7 +7,7 @@ output:
        in_header: GA_Script.html
 ---
 * **Source:** [TN COVID Beds](https://tncovidbeds.tnega.org/)
-* **Latest data import date:** `r format(Sys.time()-10000, '%d %B, %Y')`
+* **Latest data import date:** `r format(Sys.time(), '%d %B, %Y')`
 * **Summary:** Tamil Nadu Government publishes COVID bed availability of **"Normal, O2 & ICU Beds"**, by each district. Using it, heatmap is generated to view **"The STRESSLEVEL of frontline workers"**, by District and Area.
 
 
@@ -17,7 +17,9 @@ output:
   + [Chengalpattu](#Chengalpattu)
   + [Chennai](#Chennai)
   + [Coimbatore](#Coimbatore)
-
+  + [Namakkal](#Namakkal)
+  
+  
 ```{r packages, results="hide",echo=FALSE, message=FALSE, warning=FALSE}
 # IMPORT Packages 
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
@@ -466,6 +468,85 @@ ggplot(Coimbatore_Area_CovidBeds
   ylab(label = "Area") +
   xlab(label = "Date") +
   scale_y_discrete(limits = rev(levels(as.factor(droplevels(Coimbatore_Area_CovidBeds$Area) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+
+###### [Back to full list of Districts](#lod) {style="float:right"}
+
+
+## Namakkal {#Namakkal}
+
+```{r echo=FALSE, warning=FALSE, fig.height=7, fig.width=7}
+Namakkal_Area_CovidBeds <- TN_Area_CovidBeds %>% filter(District == "Namakkal")
+
+ggplot(Namakkal_Area_CovidBeds
+       ,aes(importDate, Area)) + 
+  geom_tile(aes(fill= Normal_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "Normal Bed Occupancy (%)") +
+  ylab(label = "Area") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Namakkal_Area_CovidBeds$Area) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+
+```{r echo=FALSE, warning=FALSE, fig.height=7, fig.width=7}
+ggplot(Namakkal_Area_CovidBeds
+       ,aes(importDate, Area)) + 
+  geom_tile(aes(fill= O2_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "O2 Bed Occupancy (%)") +
+  ylab(label = "Area") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Namakkal_Area_CovidBeds$Area) ))) 
+                   ,position = "left") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank(), # Remove y-axis title
+        strip.background = element_rect(fill = "#EEEEEE", color = "#FFFFFF"),
+        legend.position="top"
+  ) +
+  scale_x_date(date_breaks = "1 week", date_minor_breaks = "1 day", date_labels = "%d/%m")
+
+```
+
+```{r echo=FALSE, warning=FALSE, fig.height=7, fig.width=7}
+ggplot(Namakkal_Area_CovidBeds
+       ,aes(importDate, Area)) + 
+  geom_tile(aes(fill= ICU_Bed_Occupancy_Y1),colour="white",size=0.25) +
+  # scale_fill_gradient(low="#fffaaf", high="#ff4747") +
+  scale_fill_manual(breaks=c("[0,0)", "[0,0.2)", "[0.2,0.4)", "[0.4,0.6)", "[0.6,0.8)", "[0.8,1)","[1,Inf)"),
+                    values = c("#e6e6e6", "#c9ff96", "#fffa96","#ffc800", "#ff7d00", "#ff0000","#af0000"),
+                    labels = c("0", "0-20", "20-40", "40-60", "60-80", "80-100","100" ),
+                    name = "ICU Bed Occupancy (%)") +
+  ylab(label = "Area") +
+  xlab(label = "Date") +
+  scale_y_discrete(limits = rev(levels(as.factor(droplevels(Namakkal_Area_CovidBeds$Area) ))) 
                    ,position = "left") +
   theme_classic() +
   theme(strip.placement = "outside",
