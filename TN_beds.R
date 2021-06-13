@@ -221,29 +221,35 @@ byDist_CovidBeds<-read.table(file_byDist_CovidBeds,header=TRUE, row.names=NULL)
 byDist_CovidBeds<-tibble(byDist_CovidBeds)
 byDist_CovidBeds %>% group_by(importDate) %>% summarise(n(),sum(All_Bed_Total)) %>% arrange(desc(importDate))
 
+#-------------------------------------------------------------------
 # Write a copy 
+#-------------------------------------------------------------------
 # write.table(tbl_TN_CovidBeds, file_TN_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
 # write.table(tbl_byDist_CovidBeds, file_byDist_CovidBeds, append = TRUE, col.names = FALSE, row.names = FALSE)
+#-------------------------------------------------------------------
 
 #-------------------------------------------------------------------
 # Move HTML File name
+#-------------------------------------------------------------------
 # file_move("/home/arunkumar/Documents/GitHub/TN_Beds/TN_Bed_Occupancy.html", "/home/arunkumar/Documents/GitHub/aruncps.github.io/TN_Bed_Occupancy.html")
+#-------------------------------------------------------------------
 
 
-
-file_AreaSplit_TN_CovidHospitals<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/AreaSplit_TN_CovidHospitals.csv")
-AreaSplit_TN_CovidHospitals<-read.csv(file_AreaSplit_TN_CovidHospitals,header=TRUE, row.names=NULL)
-AreaSplit_TN_CovidHospitals<-tibble(AreaSplit_TN_CovidHospitals)
-
-View(
-TN_CovidBeds %>% mutate(HospitalName=str_trim(HospitalName)) %>%
-  left_join(AreaSplit_TN_CovidHospitals %>% mutate(HospitalName=str_trim(HospitalName)), by = c("District"="District","HospitalName"="HospitalName")) %>%
-  # filter(is.na(Area) & District %in% c('Chennai','Chengalpattu','Ariyalur','Coimbatore') ) %>%
-  filter(is.na(Area) & District %in% c('Namakkal') ) %>%
-  select(District,HospitalName) %>%
-  distinct()
-  )
-
-write.table(namakkal, paste0("/home/arunkumar/Documents/GitHub/TN_Beds/Namakkal.csv"), append = TRUE, col.names = FALSE, row.names = FALSE)
-
-
+#-------------------------------------------------------------------
+# Verify for any new hospitals
+#-------------------------------------------------------------------
+# file_AreaSplit_TN_CovidHospitals<-paste0("/home/arunkumar/Documents/GitHub/TN_Beds/AreaSplit_TN_CovidHospitals.csv")
+# AreaSplit_TN_CovidHospitals<-read.csv(file_AreaSplit_TN_CovidHospitals,header=TRUE, row.names=NULL)
+# AreaSplit_TN_CovidHospitals<-tibble(AreaSplit_TN_CovidHospitals)
+# 
+# View(
+# TN_CovidBeds %>% mutate(HospitalName=str_trim(HospitalName)) %>%
+#   left_join(AreaSplit_TN_CovidHospitals %>% mutate(HospitalName=str_trim(HospitalName)), by = c("District"="District","HospitalName"="HospitalName")) %>%
+#   # filter(is.na(Area) & District %in% c('Chennai','Chengalpattu','Ariyalur','Coimbatore') ) %>%
+#   filter(is.na(Area) & District %in% c('Namakkal') ) %>%
+#   select(District,HospitalName) %>%
+#   distinct()
+#   )
+# 
+# write.table(namakkal, paste0("/home/arunkumar/Documents/GitHub/TN_Beds/Namakkal.csv"), append = TRUE, col.names = FALSE, row.names = FALSE)
+#------------------------------------------------------------------- 
