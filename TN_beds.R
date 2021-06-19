@@ -2,7 +2,7 @@
 lapply(c("tidyverse","rvest","stringr","hrbrthemes","viridis","plotly","scales","fs","RSelenium","stringr","zoo","tidyquant"), library, character.only = TRUE)
 
 # DEFINE Variables
-currDate<-Sys.Date()
+currDate<-Sys.Date()-1
 start_time<-Sys.time()
 
 #--------- Working code
