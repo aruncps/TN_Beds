@@ -7,7 +7,7 @@ output:
        in_header: GA_Script.html
 ---
 * **Source:** [TN COVID Beds](https://tncovidbeds.tnega.org/)
-* **Latest data import date:** `r format(Sys.time(), '%d %B, %Y')`
+* **Latest data import date:** `r format(Sys.time()-100000, '%d %B, %Y')`
 * **Summary:** Tamil Nadu Government publishes COVID bed availability of **"Normal, O2 & ICU Beds"**, by each district. Using it, heatmap is generated to view **"The STRESSLEVEL of frontline workers"**, by District and Area.
 
 
